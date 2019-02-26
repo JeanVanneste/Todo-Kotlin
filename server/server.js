@@ -5,8 +5,8 @@ const bodyParser = require('body-parser')
 const path = require('path')
 
 const todos = new NeDB({
-    filename: path.join(__dirname, 'todo.db'),
-    autoload: true
+	filename: path.join(__dirname, 'todo.db'),
+	autoload: true
 })
 
 const app = express()
@@ -25,8 +25,26 @@ app.get('/todos', (req, res) => {
 
 app.post('/todos', (req, res) => {
 	if(req.body) {
+		console.log(req.body)
 		todos.insert({
 			value: req.body.value
+		}, (err) => {
+			if(err) {
+				res.send({
+					ok: false,
+					error: err
+				})
+			}
+
+			res.send({
+				ok: true
+			})
+		})
+	}
+	else {
+		res.send({
+			ok: false,
+			error: "No Body Provided"
 		})
 	}
 })
